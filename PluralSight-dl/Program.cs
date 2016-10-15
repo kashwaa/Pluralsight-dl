@@ -36,7 +36,7 @@ namespace PluralSight_dl
 
             //Display a progress bar when download starts
             downloader.DownloadBegin += (sender, e) => {
-                bar = new ProgressBar(100, e.module.Title + "/" + e.clip.Title);
+                bar = new ProgressBar(100, e.Message);
             };
 
             //Update the bar as download progresses

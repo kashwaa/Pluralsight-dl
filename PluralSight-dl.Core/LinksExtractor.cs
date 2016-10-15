@@ -57,6 +57,11 @@ namespace PluralSight_dl.Core
                 c.Modules.Add(m);
 
             }
+
+            Request ExerciseFilesRequest = new GetRequest(login.container);
+            string ExerciseFilesJson = ExerciseFilesRequest.SendRequest($"https://app.pluralsight.com/learner/courses/{courseName}/exercise-files");
+            dynamic ExcerciseFiles = Newtonsoft.Json.JsonConvert.DeserializeObject(ExerciseFilesJson);
+            c.ExcerciseFiles = ExcerciseFiles.exerciseFilesUrl ?? null;
             return c;
         }
 

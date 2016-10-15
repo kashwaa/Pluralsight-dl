@@ -24,6 +24,15 @@ namespace PluralSight_dl.Core
         public void DownloadCourse(Course course, string path)
         {
             Directory.CreateDirectory(Path.Combine(path, course.Title));
+            if (course.ExcerciseFiles!=null)
+            {
+                if (DownloadBegin != null)
+                {
+                    DownloadBegin(this, new DownloadBeginEventArgs() { Message = "Excercise Files" });
+                }
+                DownloadFile(course.ExcerciseFiles, Path.Combine(path, course.Title,"ExcerciseFiles.zip"));
+
+            }
             foreach (var module in course.Modules)
             {
                 Directory.CreateDirectory(Path.Combine(path, course.Title, module.Title));
@@ -31,9 +40,9 @@ namespace PluralSight_dl.Core
                 {
                     if (DownloadBegin != null)
                     {
-                        DownloadBegin(this, new DownloadBeginEventArgs() { clip = clip, module = module });
+                        DownloadBegin(this, new DownloadBeginEventArgs() { Message = module.Title + "/" + clip.Title });
                     }
-                    DownloadClip(clip, Path.Combine(path, course.Title, module.Title, clip.Title + ".mp4"));
+                    DownloadFile(clip.Url, Path.Combine(path, course.Title, module.Title, clip.Title + ".mp4"));
                 }
             }
         }
@@ -42,11 +51,11 @@ namespace PluralSight_dl.Core
         /// </summary>
         /// <param name="clip">The course object</param>
         /// <param name="Path">The path to store the videos</param>
-        private void DownloadClip(Clip clip,string Path)
+        private void DownloadFile(string url,string Path)
         {
             WebClient client = new WebClient();
             client.DownloadProgressChanged += Client_DownloadProgressChanged;
-            client.DownloadFileAsync(new Uri(clip.Url), Path);
+            client.DownloadFileAsync(new Uri(url), Path);
             while (client.IsBusy)
             {
 
@@ -69,8 +78,7 @@ namespace PluralSight_dl.Core
 
         public class DownloadBeginEventArgs : EventArgs
         {
-            public Clip clip { get; set; }
-            public Module module { get; set; }
+            public string Message { get; set; }
         }
     }
 }

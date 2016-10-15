@@ -11,6 +11,7 @@ namespace PluralSight_dl.Core
         private string _title;
         public string Title { get { return _title; } set { _title = CourseHelper.SanitizeFileName(value); } }
         public List<Module> Modules { get; set; }
+        public string ExcerciseFiles { get; set; }
         public Course()
         {
             this.Modules = new List<Module>();
